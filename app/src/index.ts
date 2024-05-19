@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client'
-import express from 'express'
+import { PrismaClient } from '@prisma/client';
+import express from 'express';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 import { env } from '../constants';
 
 const app = express();
