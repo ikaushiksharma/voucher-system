@@ -4,13 +4,9 @@ import authMiddleware from '../middlewares/auth';
 
 export default function discountRoute() {
   const router = express.Router();
-  router.get('/api/discounts', authMiddleware, discountController.list);
-  router.get('/api/discounts/:id', authMiddleware, discountController.read);
-  router.post('/api/discounts', authMiddleware, discountController.create);
-  router.put('/api/discounts/:id', authMiddleware, discountController.update);
-  router.delete(
-    '/api/discounts/:id',
-    authMiddleware,
-    discountController.delete
-  );
+  router.get('/', authMiddleware, discountController.list);
+  router.get('/:id', authMiddleware, discountController.read);
+  router.post('/', authMiddleware, discountController.create);
+  router.put('/:id', authMiddleware, discountController.update);
+  router.delete('/:id', authMiddleware, discountController.delete);
 }
