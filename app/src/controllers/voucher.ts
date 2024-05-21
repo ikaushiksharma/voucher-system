@@ -1,5 +1,5 @@
-const auth = () => {
+const voucherController = () => {
   return 'hi';
 };
 
-export default auth;
+export default voucherController;

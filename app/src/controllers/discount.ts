@@ -1,6 +1,6 @@
-const auth = () => {
+const discountController = () => {
     return 'hi';
   };
   
-  export default auth;
+  export default discountController;
   
