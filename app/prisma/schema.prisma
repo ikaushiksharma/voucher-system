@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Coupon {
+model Voucher {
   id               Int        @id @default(autoincrement())
   createdAt        DateTime   @default(now())
   code             String     @unique
@@ -35,8 +35,8 @@ model Discount {
 
   user     String @db.VarChar(255)
   code     String @db.VarChar(255)
-  couponId Int
-  coupon   Coupon @relation(fields: [couponId], references: [id])
+  voucherId Int
+  voucher   Voucher @relation(fields: [voucherId], references: [id])
 
   start DateTime @default(now())
   end   DateTime
