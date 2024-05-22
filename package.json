@@ -1,0 +1,13 @@
+{
+  "name": "voucher-system",
+  "version": "1.0.0",
+  "description": "This project is a voucher service backend system built using Node.js, Express.js, and PostgreSQL database. It provides functionality to generate, manage, and redeem vouchers.",
+  "scripts": {
+    "prepare": "husky install",
+    "build": "npx tsc",
+    "start": "nodemon dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only app/src/index.ts",
+    "prettier": "prettier --write .",
+    "lint": "eslint . --ext .ts"
+  }
+}

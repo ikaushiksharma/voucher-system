@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,31 +7,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
+
+enum VoucherType {
+  FIXED
+  PERCENT
+}
+
 model Voucher {
-  id               Int        @id @default(autoincrement())
-  createdAt        DateTime   @default(now())
-  code             String     @unique
-  email            String     @unique
-  duration         String     @default("once")
-  durationInMonths Int?
-  redeemBy         DateTime?
-  maxRedemptions   Int?
-  timesRedeemed    Int        @default(0)
-  percentOff       Float?
-  amountOff        Float?
-  currency         String?
-  metadata         Json?
-  Discount         Discount[]
+  id                Int         @id @default(autoincrement())
+  slug              String      @unique
+  type              VoucherType @default(FIXED)
+  description       String
+  status            Status      @default(ACTIVE)
+  redeemBy          DateTime
+  maxRedemptions    Int
+  timesRedeemed     Int         @default(0)
+  percentOff        Float?
+  amountOff         Float?
+  maxDiscountAmount Float?
+  minOrderAmount    Float?
+  metadata          Json?
+  createdAt         DateTime    @default(now())
+  Discount          Discount[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Discount {
-  id Int @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int
+  voucher       Voucher  @relation(fields: [voucherId], references: [id])
+  voucherId     Int
+  initialAmount Float?
+  finalAmount   Float?
+  createdAt     DateTime @default(now())
+}
 
-  user     String @db.VarChar(255)
-  code     String @db.VarChar(255)
-  voucherId Int
-  voucher   Voucher @relation(fields: [voucherId], references: [id])
-
-  start DateTime @default(now())
-  end   DateTime
+model User {
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  role     Role       @default(USER)
+  Discount Discount[]
 }

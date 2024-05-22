@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgresdb:
@@ -17,7 +17,7 @@ services:
     depends_on:
       - postgresdb
     build: ./app
-    restart: unless-stopped
+    restart: always
     env_file: ./.env
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
@@ -30,5 +30,5 @@ services:
     stdin_open: true
     tty: true
 
-volumes: 
+volumes:
   db:
