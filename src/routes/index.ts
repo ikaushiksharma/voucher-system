@@ -1,5 +1,5 @@
 import express from 'express';
-import authMiddleware from '../middlewares/auth';
+import authMiddleware from '../middlewares/isAuthenticated';
 import voucherController from '../controllers/voucher';
 import discountRoute from './discount';
 import voucherRoute from './voucher';

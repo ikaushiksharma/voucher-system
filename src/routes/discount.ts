@@ -1,6 +1,6 @@
 import express from 'express';
 import discountController from '../controllers/discount';
-import authMiddleware from '../middlewares/auth';
+import authMiddleware from '../middlewares/isAuthenticated';
 
 export default function discountRoute() {
   const router = express.Router();

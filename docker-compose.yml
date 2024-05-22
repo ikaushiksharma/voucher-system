@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   postgresdb:
@@ -16,7 +16,7 @@ services:
   app:
     depends_on:
       - postgresdb
-    build: ./app
+    build: .
     restart: always
     env_file: ./.env
     ports:

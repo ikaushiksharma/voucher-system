@@ -1,6 +1,6 @@
 import express from 'express';
 import voucherController from '../controllers/voucher';
-import authMiddleware from '../middlewares/auth';
+import authMiddleware from '../middlewares/isAuthenticated';
 
 export default function voucherRoute() {
   const router = express.Router();
