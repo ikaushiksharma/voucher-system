@@ -23,7 +23,6 @@ git clone https://github.com/ikaushiksharma/voucher-system.git
 cd voucher-system
 ```
 
-
 ## Usage
 
 1. Start the PostgreSQL database using Docker Compose:
@@ -38,12 +37,10 @@ The server will be running at `http://localhost:3000`.
 
 ![Database Model](https://github.com/ikaushiksharma/voucher-system/assets/90143986/d3d73bc6-e9b8-4e4f-acf0-805be233db10)
 
-
-*Add description of the database model here.*
+_Add description of the database model here._
 
 ## API Diagram
 
 ![API DIAGRAM](https://github.com/ikaushiksharma/voucher-system/assets/90143986/34c08995-6678-4ec0-9dbb-68c876cbe557)
 
-
-*Add description of the API endpoints and their functionality here.*
+_Add description of the API endpoints and their functionality here._

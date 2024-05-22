@@ -1,8 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { Request, Response } from 'express';
-const prisma = new PrismaClient();
-const voucherController = {
-  list: async (req: Request, res: Response) => {
+import { Response } from 'express';
+import catchAsyncError from '../middlewares/catchAsyncError';
+import { Request } from '../../types';
+import prisma from '../../lib/prisma';
+
+export const listVouchers = catchAsyncError(
+  async (req: Request, res: Response) => {
     try {
       const vouchers = await prisma.voucher.findMany();
       res.json(vouchers);
@@ -11,7 +13,5 @@ const voucherController = {
         .status(500)
         .json({ message: 'An error occurred while fetching vouchers' });
     }
-  },
-};
-
-export default voucherController;
+  }
+);

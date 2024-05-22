@@ -37,11 +37,14 @@ const discountController = {
   },
 
   create: async (req: Request, res: Response) => {
-    const { code, user } = req.body;
+    const { code, redeemBy } = req.body;
     try {
       const discount = await prisma.voucher.create({
         data: {
-          code: code.toUpperCase(),
+          slug: code.toUpperCase(),
+          description: 'Discount',
+          redeemBy: new Date(redeemBy),
+          maxRedemptions: 2,
         },
       });
       res.json(discount);

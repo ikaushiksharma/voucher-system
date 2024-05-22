@@ -2,8 +2,14 @@ import jwt from 'jsonwebtoken';
 import AsyncErrorHandler from '../utils/asyncErrorHandler';
 import catchAsyncError from './catchAsyncError';
 import prisma from '../../lib/prisma';
+import { NextFunction, Response } from 'express';
+import { Request } from '../../types/index';
 
-export const isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
+const isAuthenticatedUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { token } = req.cookies;
   if (!token) {
     return next(
@@ -20,4 +26,6 @@ export const isAuthenticatedUser = catchAsyncError(async (req, res, next) => {
   });
 
   next();
-});
+};
+
+export default isAuthenticatedUser;

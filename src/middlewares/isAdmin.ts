@@ -3,7 +3,7 @@ import ResponseHandler from '../utils/responseHandler';
 import prisma from '../../lib/prisma';
 import catchAsyncError from './catchAsyncError';
 
-const isUserAdmin = catchAsyncError(
+const isAdmin = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.userId) {
       const user = await prisma.user.findUnique({
@@ -30,4 +30,4 @@ const isUserAdmin = catchAsyncError(
   }
 );
 
-export { isUserAdmin };
+export default isAdmin;
