@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Request } from '../../types';
+import { Request } from '../types';
 import catchAsyncError from '../middlewares/catchAsyncError';
 import ResponseHandler from '../utils/responseHandler';
 import { sendToken } from '../utils/jwtToken';
@@ -76,6 +76,12 @@ export const deleteUser = catchAsyncError(
     const { id } = req.params;
     const user = await userService.deleteUser(parseInt(id));
     res.status(200).json(new ResponseHandler(200, user, 'User deleted'));
+  }
+);
+
+export const logoutUser = catchAsyncError(
+  async (req: Request, res: Response) => {
+    res.status(200).json(new ResponseHandler(200, null, 'User logged out'));
   }
 );
 

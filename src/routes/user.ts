@@ -7,6 +7,7 @@ import {
   getUserById,
   listAllUsers,
   loginUser,
+  logoutUser,
   registerUser,
   updateUser,
 } from '../controllers/user';
@@ -15,6 +16,7 @@ const router = Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/logout', isAuthenticatedUser, logoutUser);
 router.get('/all', isAuthenticatedUser, isAdmin, listAllUsers);
 router.get('/:id', isAuthenticatedUser, isAdmin, getUserById);
 router.put('/:id', isAuthenticatedUser, isAdmin, updateUser);

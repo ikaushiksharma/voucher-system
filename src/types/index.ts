@@ -1,4 +1,4 @@
-import { Role, User } from '@prisma/client';
+import { Cart, Category, Order, Role, User, VoucherType } from '@prisma/client';
 import { Request as ExpressRequest } from 'express';
 
 export interface Request extends ExpressRequest {
@@ -9,14 +9,16 @@ export interface Request extends ExpressRequest {
 export interface IVoucher {
   slug: string;
   description: string;
-  redeemBy: Date;
+  type: VoucherType;
+  forNewUsersOnly: boolean;
+  expiryDate: Date;
   maxRedemptions: number;
   timesRedeemed?: number;
   percentOff?: number;
   amountOff?: number;
+  metadata?: {};
   maxDiscountAmount?: number;
   minOrderAmount?: number;
-  metadata?: {};
 }
 
 export interface IUser {

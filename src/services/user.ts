@@ -1,5 +1,5 @@
-import { IUser } from '../../types';
-import prisma from '../../lib/prisma';
+import { IUser } from '../types';
+import prisma from '../lib/prisma';
 
 const userService = {
   createUser: async (data: IUser) => {

@@ -6,6 +6,7 @@ import {
   createVoucher,
   updateVoucher,
   deleteVoucher,
+  applyVoucher,
 } from '../controllers/voucher';
 import isAdmin from '../middlewares/isAdmin';
 
@@ -17,5 +18,6 @@ router.post('/:slug', getVoucherBySlug);
 router.post('/', isAdmin, createVoucher);
 router.put('/:id', isAdmin, updateVoucher);
 router.delete('/:id', isAdmin, deleteVoucher);
+router.get('/:voucherId/:cartId', applyVoucher);
 
 export default router;

@@ -1,16 +1,18 @@
 import { Response } from 'express';
 import catchAsyncError from '../middlewares/catchAsyncError';
-import { Request } from '../../types';
-import prisma from '../../lib/prisma';
+import { Request } from '../types';
+import prisma from '../lib/prisma';
 import voucherService from '../services/voucher';
 
 export const createVoucher = catchAsyncError(
   async (req: Request, res: Response) => {
-    const { code, redeemBy } = req.body;
+    const { code, expiryDate, forNewUsersOnly, type } = req.body;
     const voucher = await voucherService.createVoucher({
       slug: code.toUpperCase(),
       description: 'Discount',
-      redeemBy: new Date(redeemBy),
+      forNewUsersOnly: forNewUsersOnly,
+      type: type,
+      expiryDate: new Date(expiryDate),
       maxRedemptions: 2,
     });
     res.json(voucher);
@@ -56,5 +58,36 @@ export const deleteVoucher = catchAsyncError(
     const { id } = req.params;
     const voucher = await voucherService.deleteVoucher(parseInt(id));
     res.json(voucher);
+  }
+);
+
+export const applyVoucher = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { voucherId } = req.params;
+    const user = req.user;
+
+    const { cartId } = req.body;
+
+    const voucher = await prisma.voucher.findUnique({
+      where: { id: +voucherId },
+    });
+    const cart = await prisma.cart.findUnique({
+      where: { id: cartId },
+      include: { products: true },
+    });
+
+    const result = await voucherService.isVoucherApplicable(
+      voucher,
+      cart,
+      user
+    );
+
+    if (!result.isApplicable) {
+      return res.status(400).json({ message: result.error });
+    }
+
+    res.json({
+      discount: result.totalDiscount,
+    });
   }
 );

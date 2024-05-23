@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import AsyncErrorHandler from '../utils/asyncErrorHandler';
-import { Request } from '../../types';
+import { Request } from '../types';
 const errorMiddleware = (
   err: any,
   req: Request,

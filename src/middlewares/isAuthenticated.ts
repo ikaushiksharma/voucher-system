@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AsyncErrorHandler from '../utils/asyncErrorHandler';
 import { NextFunction, Response } from 'express';
-import { Request } from '../../types/index';
+import { Request } from '../types/index';
 import userService from '../services/user';
 
 const isAuthenticatedUser = async (
