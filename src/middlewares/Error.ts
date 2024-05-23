@@ -1,6 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import AsyncErrorHandler from '../utils/asyncErrorHandler';
-const ErrorMiddleware = (
+import { Request } from '../../types';
+const errorMiddleware = (
   err: any,
   req: Request,
   res: Response,
@@ -26,4 +27,4 @@ const ErrorMiddleware = (
   });
 };
 
-export default ErrorMiddleware;
+export default errorMiddleware;

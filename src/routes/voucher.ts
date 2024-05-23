@@ -3,7 +3,7 @@ import { listVouchers } from '../controllers/voucher';
 import isAuthenticatedUser from '../middlewares/isAuthenticated';
 
 const router = Router();
-router.get('/all', isAuthenticatedUser, listVouchers);
+router.get('/all', listVouchers);
 // router.get('/:id', authMiddleware, voucherController.read);
 // router.post('', authMiddleware, voucherController.create);
 // router.put('/:id', authMiddleware, voucherController.update);

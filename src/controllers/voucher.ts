@@ -5,13 +5,9 @@ import prisma from '../../lib/prisma';
 
 export const listVouchers = catchAsyncError(
   async (req: Request, res: Response) => {
-    try {
-      const vouchers = await prisma.voucher.findMany();
-      res.json(vouchers);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: 'An error occurred while fetching vouchers' });
-    }
+    console.log('Fetching vouchers...');
+    const vouchers = await prisma.voucher.findMany({});
+    console.log(vouchers);
+    res.json(vouchers);
   }
 );
