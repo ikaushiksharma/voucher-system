@@ -1,9 +1,8 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import AsyncErrorHandler from '../utils/asyncErrorHandler';
-import catchAsyncError from './catchAsyncError';
 import { NextFunction, Response } from 'express';
 import { Request } from '../../types/index';
-import { getUserById } from '../services/user';
+import userService from '../services/user';
 
 const isAuthenticatedUser = async (
   req: Request,
@@ -17,9 +16,10 @@ const isAuthenticatedUser = async (
     );
   }
 
-  const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+  const decodedData = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+  const id = decodedData.id;
 
-  req.user = await getUserById(decodedData.id);
+  req.user = await userService.getUserById(id);
 
   next();
 };

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import ResponseHandler from '../utils/responseHandler';
 import catchAsyncError from './catchAsyncError';
-import { getUserById } from '../services/user';
+import userService from '../services/user';
 
 const isAdmin = catchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.userId) {
-      const user = await getUserById(req.body.userId);
+      const user = await userService.getUserById(req.body.userId);
       if (user.role === 'ADMIN') {
         next();
       } else {

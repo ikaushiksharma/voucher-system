@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { Response } from 'express';
-import { jwt } from 'jsonwebtoken';
+import  jwt  from 'jsonwebtoken';
 export const sendToken = (user: User, statusCode: number, res: Response) => {
   const token = generateToken(user);
   const options = {
