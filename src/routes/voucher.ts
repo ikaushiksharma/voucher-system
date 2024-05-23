@@ -1,11 +1,21 @@
 import { Router } from 'express';
-import { listVouchers } from '../controllers/voucher';
-import isAuthenticatedUser from '../middlewares/isAuthenticated';
+import {
+  listVouchers,
+  getVoucherById,
+  getVoucherBySlug,
+  createVoucher,
+  updateVoucher,
+  deleteVoucher,
+} from '../controllers/voucher';
+import isAdmin from '../middlewares/isAdmin';
 
 const router = Router();
+
 router.get('/all', listVouchers);
-// router.get('/:id', authMiddleware, voucherController.read);
-// router.post('', authMiddleware, voucherController.create);
-// router.put('/:id', authMiddleware, voucherController.update);
-// router.delete('/:id', authMiddleware, voucherController.delete);
+router.get('/:id', getVoucherById);
+router.post('/:slug', getVoucherBySlug);
+router.post('/', isAdmin, createVoucher);
+router.put('/:id', isAdmin, updateVoucher);
+router.delete('/:id', isAdmin, deleteVoucher);
+
 export default router;

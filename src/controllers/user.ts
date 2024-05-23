@@ -3,7 +3,27 @@ import { Request } from '../../types';
 import catchAsyncError from '../middlewares/catchAsyncError';
 import ResponseHandler from '../utils/responseHandler';
 import { sendToken } from '../utils/jwtToken';
-import { getUserByEmail } from '../services/user';
+import userService from '../services/user';
+
+export const registerUser = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      res
+        .status(400)
+        .json(
+          new ResponseHandler(
+            400,
+            null,
+            'Please provide name, email and password'
+          )
+        );
+      return;
+    }
+    const user = await userService.createUser({ name, email, password });
+    sendToken(user, 201, res);
+  }
+);
 
 export const loginUser = catchAsyncError(
   async (req: Request, res: Response) => {
@@ -16,58 +36,89 @@ export const loginUser = catchAsyncError(
         );
       return;
     }
-    const user = await getUserByEmail(email);
+    const user = await userService.getUserByEmail(email);
     if (!user || user.password !== password) {
       res
         .status(401)
         .json(new ResponseHandler(401, null, 'Invalid email or password'));
       return;
     }
-
     sendToken(user, 200, res);
   }
 );
 
-const applyVoucher = catchAsyncError(async (req: Request, res: Response) => {
-  const { voucherId, amount } = req.body;
-  const user = req.user;
-  if (!user || !amount) {
-    res
-      .status(400)
-      .json(
-        new ResponseHandler(400, null, 'User not found or amount not provided')
-      );
-    return;
+export const listAllUsers = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const users = await userService.getAllUsers();
+    res.status(200).json(new ResponseHandler(200, users, 'All users fetched'));
   }
-  if (!voucherId) {
-    res
-      .status(201)
-      .json(
-        new ResponseHandler(
-          201,
-          { amount: amount, discount: 0 },
-          'No voucher applied'
-        )
-      );
-    return;
-  }
+);
 
-  //     const canUseVoucher = await canUserUseVoucher(userId, voucherId, total);
-  //     if(!canUseVoucher.status){
-  //         res.status(400).json(new ResponseHandler(400, {total: total, discount:0}, canUseVoucher.message))
-  //         return;
-  //     }
-  //     const discount = await calculateDiscount(userId, voucherId, total);
-  //     res.status(200).json(new ResponseHandler(200, {total: (total-discount), discount: discount}'Discount calculated'))
-  // })
-
-  if (!amount) {
-    res
-      .status(400)
-      .json(new ResponseHandler(400, null, 'Please provide amount'));
-    return;
+export const getUserById = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = await userService.getUserById(parseInt(id));
+    res.status(200).json(new ResponseHandler(200, user, 'User fetched'));
   }
-  res
-    .status(200)
-    .json(new ResponseHandler(200, { amount }, 'Payment successful'));
-});
+);
+
+export const updateUser = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = req.body;
+    const user = await userService.updateUser(parseInt(id), data);
+    res.status(200).json(new ResponseHandler(200, user, 'User updated'));
+  }
+);
+
+export const deleteUser = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = await userService.deleteUser(parseInt(id));
+    res.status(200).json(new ResponseHandler(200, user, 'User deleted'));
+  }
+);
+
+// const applyVoucher = catchAsyncError(async (req: Request, res: Response) => {
+//   const { voucherId, amount } = req.body;
+//   const user = req.user;
+//   if (!user || !amount) {
+//     res
+//       .status(400)
+//       .json(
+//         new ResponseHandler(400, null, 'User not found or amount not provided')
+//       );
+//     return;
+//   }
+//   if (!voucherId) {
+//     res
+//       .status(201)
+//       .json(
+//         new ResponseHandler(
+//           201,
+//           { amount: amount, discount: 0 },
+//           'No voucher applied'
+//         )
+//       );
+//     return;
+//   }
+
+//   //     const canUseVoucher = await canUserUseVoucher(userId, voucherId, total);
+//   //     if(!canUseVoucher.status){
+//   //         res.status(400).json(new ResponseHandler(400, {total: total, discount:0}, canUseVoucher.message))
+//   //         return;
+//   //     }
+//   //     const discount = await calculateDiscount(userId, voucherId, total);
+//   //     res.status(200).json(new ResponseHandler(200, {total: (total-discount), discount: discount}'Discount calculated'))
+//   // })
+
+//   if (!amount) {
+//     res
+//       .status(400)
+//       .json(new ResponseHandler(400, null, 'Please provide amount'));
+//     return;
+//   }
+//   res
+//     .status(200)
+//     .json(new ResponseHandler(200, { amount }, 'Payment successful'));
+// });
