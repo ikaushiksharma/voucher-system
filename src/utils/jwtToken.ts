@@ -3,6 +3,7 @@ import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 export const sendToken = (user: User, statusCode: number, res: Response) => {
   const token = generateToken(user);
+
   const options = {
     expires: new Date(
       Date.now() + +process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000

@@ -29,18 +29,21 @@ cd voucher-system
 
 ```
 docker-compose up -d
+
+```
+
+2. Start the server:
+
+```
+bun install && bun dev
 ```
 
 The server will be running at `http://localhost:3000`.
 
-## Database Model
+## Class Diagram
 
-![Database Model](https://github.com/ikaushiksharma/voucher-system/assets/90143986/d3d73bc6-e9b8-4e4f-acf0-805be233db10)
+![Class Diagram](./assets/class-diagram.png)
 
-_Add description of the database model here._
+## WorkFlow Diagram
 
-## API Diagram
-
-![API DIAGRAM](https://github.com/ikaushiksharma/voucher-system/assets/90143986/34c08995-6678-4ec0-9dbb-68c876cbe557)
-
-_Add description of the API endpoints and their functionality here._
+![WorkFlow Diagram](./assets/workflow-diagram.png)

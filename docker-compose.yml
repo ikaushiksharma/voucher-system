@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgresdb:
@@ -7,28 +7,27 @@ services:
     env_file: .env
     ports:
       - $POSTGRES_PORT:$POSTGRES_PORT
-    volumes:
-      - db:/var/lib/postgres
+    # volumes:
+    #   - db:/var/lib/postgres
 
-    networks:
-      - node-network
+    # networks:
+    #   - node-network
+#   app:
+#     depends_on:
+#       - postgresdb
+#     build: .
+#     env_file: .env
+#     ports:
+#       - $BACKEND_PORT:$BACKEND_PORT
+#     stdin_open: true
+#     tty: true
+#     networks:
+#       - node-network
 
-  app:
-    depends_on:
-      - postgresdb
-    build: .
-    env_file: .env
-    ports:
-      - $BACKEND_PORT:$BACKEND_PORT
-    stdin_open: true
-    tty: true
-    networks:
-      - node-network
+# volumes:
+#   db:
+#     driver: local
 
-volumes:
-  db:
-    driver: local
-
-networks:
-  node-network:
-    driver: bridge
+# networks:
+#   node-network:
+#     driver: bridge
