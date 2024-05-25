@@ -1,5 +1,6 @@
 import { IUser } from '../types';
 import prisma from '../lib/prisma';
+import { Role } from '@prisma/client';
 
 const userService = {
   createUser: async (data: IUser) => {
@@ -21,6 +22,14 @@ const userService = {
   },
   deleteUser: async (id: number) => {
     return await prisma.user.delete({ where: { id } });
+  },
+  promoteToAdmin: async (id: number) => {
+    return await prisma.user.update({
+      where: { id },
+      data: {
+        role: Role.ADMIN,
+      },
+    });
   },
 };
 

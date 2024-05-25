@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-
 }
 
 enum Status {
@@ -15,28 +14,37 @@ enum Status {
 }
 
 enum VoucherType {
-  FIXED
-  PERCENT
+  AMOUNT_DISCOUNT
+  PERCENT_DISCOUNT
+}
+
+enum RedeemType {
+  ORDER_VALUE
+  CASHBACK
 }
 
 model Voucher {
-  id                Int         @id @default(autoincrement())
-  slug              String      @unique
-  type              VoucherType @default(FIXED)
-  description       String
-  status            Status      @default(ACTIVE)
-  expiryDate        DateTime
-  maxRedemptions    Int
-  forNewUsersOnly   Boolean     @default(false)
-  categories        Category[]
-  timesRedeemed     Int         @default(0)
-  percentOff        Float?
-  amountOff         Float?
-  maxDiscountAmount Float?
-  minOrderAmount    Float?
-  metadata          Json?
-  createdAt         DateTime    @default(now())
-  discount          Order[]
+  id                    Int         @id @default(autoincrement())
+  slug                  String      @unique
+  description           String
+  type                  VoucherType @default(AMOUNT_DISCOUNT)
+  redeemType            RedeemType  @default(ORDER_VALUE)
+  campaignName          String
+  validDaysOfWeek       Int[]
+  status                Status      @default(ACTIVE)
+  expiryDate            DateTime
+  forNewUsersOnly       Boolean     @default(false)
+  categories            Category[]
+  timesRedeemed         Int         @default(0)
+  maxRedemptions        Int?
+  maxRedemptionsPerUser Int?
+  percentOff            Float?
+  amountOff             Float?
+  maxDiscountAmount     Float?
+  minOrderAmount        Float?
+  metadata              Json?
+  createdAt             DateTime    @default(now())
+  orders                Order[]
 }
 
 enum Role {
@@ -56,13 +64,14 @@ model Order {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  email    String  @unique
-  password String
-  role     Role    @default(USER)
-  orders   Order[]
-  cart     Cart?
+  id            Int     @id @default(autoincrement())
+  name          String
+  email         String  @unique
+  password      String
+  role          Role    @default(USER)
+  walletBalance Float   @default(0)
+  orders        Order[]
+  cart          Cart?
 }
 
 model Product {

@@ -12,15 +12,16 @@ const errorMiddleware = (
 
   // Wrong JWT error
   if (err.name === 'JsonWebTokenError') {
-    const message = `Json Web Token is invalid, Try again `;
+    const message = `Json Web Token is invalid, Try logging in again`;
     err = new AsyncErrorHandler(message, 400);
   }
 
   // JWT EXPIRE error
   if (err.name === 'TokenExpiredError') {
-    const message = `Json Web Token is Expired, Try again `;
+    const message = `Json Web Token is Expired, Try logging in again `;
     err = new AsyncErrorHandler(message, 400);
   }
+
   res.status(err.statusCode).json({
     success: false,
     error: err.message,

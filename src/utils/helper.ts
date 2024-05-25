@@ -30,48 +30,78 @@ async function hasExistingOrders(userId: number) {
   return userWithOrders._count.orders > 0;
 }
 
-async function getVoucherDetails(voucherId: number, cartId: number) {
-  const voucherCategories = await prisma.voucher
-    .findUnique({ where: { id: voucherId } })
-    .categories();
-  const cartWithProducts = await prisma.cart.findUnique({
-    where: { id: cartId },
-    include: { products: true },
+async function getVoucherCategories(voucherId: number) {
+  const voucher = await prisma.voucher.findUnique({
+    where: { id: voucherId },
+    select: {
+      categories: { select: { id: true } },
+    },
   });
-  let totalPrice = 0;
-  cartWithProducts.products.forEach((item) => (totalPrice += item.price));
-  return { voucherCategories, totalPrice };
+  const voucherCategories = new Set(voucher.categories.map((c) => c.id));
+
+  return voucherCategories;
 }
 
 async function calculateDiscount(
   totalPrice: number,
+  cart: Cart,
   applicableCategories: Set<number>,
   voucher: Voucher
 ) {
+  let total = 0;
+
+  // discount valid categories only
+  const cartWithProducts = await prisma.cart.findUnique({
+    where: { id: cart.id },
+    select: { products: true },
+  });
+
+  if (applicableCategories.size === 0) {
+    total = totalPrice;
+  } else {
+    cartWithProducts.products.forEach((item) => {
+      if (applicableCategories.has(item.categoryId)) {
+        total += item.price;
+      }
+    });
+    if (total === totalPrice) {
+      return {
+        isApplicable: false,
+        totalDiscount: 0,
+        error: 'No product in cart is applicable for this voucher',
+      };
+    }
+  }
+
   let totalDiscount = 0;
-  if (voucher.type === 'PERCENT') {
+
+  if (voucher.type === 'PERCENT_DISCOUNT') {
     totalDiscount = (totalPrice * voucher.percentOff) / 100;
-  } else if (voucher.type === 'FIXED') {
+  } else if (voucher.type === 'AMOUNT_DISCOUNT') {
     totalDiscount = voucher.amountOff;
   }
   if (voucher.maxDiscountAmount) {
     totalDiscount = Math.min(totalDiscount, voucher.maxDiscountAmount);
   }
 
-  const isApplicable = applicableCategories.size > 0; // Check if any product is applicable
-
-  const error = isApplicable
-    ? undefined
-    : `No product in cart is applicable for this voucher`;
-
-  return { isApplicable, totalDiscount, error };
+  return { isApplicable: true, totalDiscount, error: undefined };
 }
 
+const getCartTotal = async (cartId: number) => {
+  const cartWithProducts = await prisma.cart.findUnique({
+    where: { id: cartId },
+    include: { products: true },
+  });
+  let totalPrice = 0;
+  cartWithProducts.products.forEach((item) => (totalPrice += item.price));
+  return totalPrice;
+};
 export {
   validateVoucher,
   validateCart,
   validateUser,
   hasExistingOrders,
-  getVoucherDetails,
+  getVoucherCategories,
   calculateDiscount,
+  getCartTotal,
 };

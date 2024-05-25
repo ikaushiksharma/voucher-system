@@ -4,6 +4,7 @@ import catchAsyncError from '../middlewares/catchAsyncError';
 import ResponseHandler from '../utils/responseHandler';
 import { sendToken } from '../utils/jwtToken';
 import userService from '../services/user';
+import prisma from '../lib/prisma';
 
 export const registerUser = catchAsyncError(
   async (req: Request, res: Response) => {
@@ -81,50 +82,70 @@ export const deleteUser = catchAsyncError(
 
 export const logoutUser = catchAsyncError(
   async (req: Request, res: Response) => {
+    res.cookie('token', null);
     res.status(200).json(new ResponseHandler(200, null, 'User logged out'));
   }
 );
 
-// const applyVoucher = catchAsyncError(async (req: Request, res: Response) => {
-//   const { voucherId, amount } = req.body;
-//   const user = req.user;
-//   if (!user || !amount) {
-//     res
-//       .status(400)
-//       .json(
-//         new ResponseHandler(400, null, 'User not found or amount not provided')
-//       );
-//     return;
-//   }
-//   if (!voucherId) {
-//     res
-//       .status(201)
-//       .json(
-//         new ResponseHandler(
-//           201,
-//           { amount: amount, discount: 0 },
-//           'No voucher applied'
-//         )
-//       );
-//     return;
-//   }
+export const initDemoSetup = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const user = await userService.promoteToAdmin(req.user.id);
+    await prisma.cart.deleteMany();
+    await prisma.product.deleteMany();
+    await prisma.category.deleteMany();
+    const categories = await prisma.category.createManyAndReturn({
+      data: [
+        { name: 'Category 1' },
+        { name: 'Category 2' },
+        { name: 'Category 3' },
+      ],
+    });
 
-//   //     const canUseVoucher = await canUserUseVoucher(userId, voucherId, total);
-//   //     if(!canUseVoucher.status){
-//   //         res.status(400).json(new ResponseHandler(400, {total: total, discount:0}, canUseVoucher.message))
-//   //         return;
-//   //     }
-//   //     const discount = await calculateDiscount(userId, voucherId, total);
-//   //     res.status(200).json(new ResponseHandler(200, {total: (total-discount), discount: discount}'Discount calculated'))
-//   // })
+    const cart = await prisma.cart.create({
+      data: {
+        userId: req.user.id,
+        products: {
+          createMany: {
+            data: [
+              {
+                name: 'Product 1',
+                price: 100,
+                categoryId: categories[0].id,
+              },
+              {
+                name: 'Product 2',
+                price: 200,
+                categoryId: categories[1].id,
+              },
+              {
+                name: 'Product 3',
+                price: 300,
+                categoryId: categories[2].id,
+              },
+              {
+                name: 'Product 4',
+                price: 600,
+                categoryId: categories[0].id,
+              },
+              {
+                name: 'Product 5',
+                price: 500,
+                categoryId: categories[1].id,
+              },
+              {
+                name: 'Product 6',
+                price: 400,
+                categoryId: categories[2].id,
+              },
+            ],
+          },
+        },
+      },
+      include: {
+        products: true,
+      },
+    });
 
-//   if (!amount) {
-//     res
-//       .status(400)
-//       .json(new ResponseHandler(400, null, 'Please provide amount'));
-//     return;
-//   }
-//   res
-//     .status(200)
-//     .json(new ResponseHandler(200, { amount }, 'Payment successful'));
-// });
+    res.status(200).json(new ResponseHandler(200, cart, 'Demo setup done'));
+  }
+);

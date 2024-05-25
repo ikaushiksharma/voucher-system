@@ -1,4 +1,4 @@
-import { Cart, Category, Order, Role, User, VoucherType } from '@prisma/client';
+import { Role, User, VoucherType } from '@prisma/client';
 import { Request as ExpressRequest } from 'express';
 
 export interface Request extends ExpressRequest {
@@ -9,6 +9,8 @@ export interface Request extends ExpressRequest {
 export interface IVoucher {
   slug: string;
   description: string;
+  campaignName: string;
+  validDaysOfWeek: number[];
   type: VoucherType;
   forNewUsersOnly: boolean;
   expiryDate: Date;
@@ -19,6 +21,8 @@ export interface IVoucher {
   metadata?: {};
   maxDiscountAmount?: number;
   minOrderAmount?: number;
+  maxRedemptionsPerUser?: number;
+  cashbackAmount?: number;
 }
 
 export interface IUser {

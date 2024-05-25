@@ -6,6 +6,6 @@ import isAuthenticatedUser from '../middlewares/isAuthenticated';
 const router = express.Router();
 
 router.use('/user', userRoute);
-router.use('/vouchers', isAuthenticatedUser, voucherRoute);
+router.use('/voucher', isAuthenticatedUser, voucherRoute);
 
 export default router;
