@@ -47,7 +47,7 @@ The server will be running at `http://localhost:3000`.
 
 ## Class Diagram
 
-![Class Diagram](./assets/class-diagram.png)
+![Class Diagram](./assets/class-diagram-2.png)
 
 ## WorkFlow Diagram
 
