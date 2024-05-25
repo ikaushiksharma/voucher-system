@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "nodemon dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts && npx prisma db push",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "prettier": "prettier --write .",
     "lint": "eslint . --ext .ts"
   },

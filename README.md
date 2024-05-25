@@ -23,19 +23,24 @@ git clone https://github.com/ikaushiksharma/voucher-system.git
 cd voucher-system
 ```
 
+3. Setup ENVs:
+
+```
+cp .env.example .env
+```
+
 ## Usage
 
-1. Start the PostgreSQL database using Docker Compose:
+1. Start the PostgreSQL database and Server using Docker Compose:
 
 ```
 docker-compose up -d
-
 ```
 
-2. Start the server:
+2. Push DB Schema to PostgreSQL:
 
 ```
-bun install && bun dev
+docker exec -it voucher-system-app-1 npx prisma db push
 ```
 
 The server will be running at `http://localhost:3000`.
